@@ -28,25 +28,17 @@
 
   }
 
-  function generateImages($images_relative) {
+  function generateHeaderHTML($date, $j) {
 
-    $images_html = "";
+    $header_html = '<h3 id="' . 'date' . $j . '" class="dateHeader" >' . $date . '</h3>';
 
-    $date = getImageEpochStamp($images_relative, 0);
-    $images_html = $images_html . '<h3>' . $date . '</h3>';
+    return $header_html;
 
-    for($i = 0; $i < Count($images_relative["images"]); $i++) {
+  }
 
-      if ($date != getImageEpochStamp($images_relative, $i)) {
+  function generateImageHTML($images_relative, $i, $encoded_data) {
 
-        $date = getImageEpochStamp($images_relative, $i);
-        $images_html = $images_html . '<h3>' . $date . '</h3>';
-
-      }
-
-      $encoded_data = encodeJsonArray($i);
-
-      $images_html = $images_html .
+      $images_html = 
         '<img src="' .
         $images_relative["images"][$i] .
         '" name="' .
@@ -56,6 +48,33 @@
         '" class="thumbnail-photo" onClick=redirect(\'./slideShow.php\',' .
         $encoded_data .
         ') loading="lazy" />';
+
+      return $images_html;
+
+  }
+
+  function generateImages($images_relative) {
+
+    $images_html = "";
+
+    $date = getImageEpochStamp($images_relative, 0);
+    $j = 0;
+
+    $images_html = $images_html . generateHeaderHTML($date, $j);
+
+    for($i = 0; $i < Count($images_relative["images"]); $i++) {
+
+      if ($date != getImageEpochStamp($images_relative, $i)) {
+
+        $j++;
+        $date = getImageEpochStamp($images_relative, $i);
+        $images_html = $images_html . generateHeaderHTML($date, $j);
+
+      }
+
+      $encoded_data = encodeJsonArray($i);
+
+      $images_html = $images_html . generateImageHTML($images_relative, $i, $encoded_data);
 
     }
 

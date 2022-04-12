@@ -1,5 +1,9 @@
-document.getElementById('title').innerHTML = images["images"][0].replace("./img/","");
-document.getElementById('sep').innerHTML = "|";
+if (document.getElementById('title'))
+  document.getElementById('title').innerHTML = images["images"][0].replace("./img/","");
+if (document.getElementById('sep'))
+  document.getElementById('sep').innerHTML = "|";
+
+generateHeaderLinks(getDateHeaders());
 
 function goto_photo(seqnum) {
 
@@ -65,6 +69,27 @@ function get_dateTime(images, seqnum) {
 
 }
 
+function get_date(images, seqnum) {
+
+  console.log(date);
+  var date = images["metadata"][seqnum]["DateTimeOriginal"];
+  date = date.replace(/([0-9]{4}):([0-9]{2}):([0-9]{2}) /, "$1-$2-$3T");
+  date = date.replace(/T.*/);
+  console.log(date);
+
+  date = new Date(date);
+
+  var day = dateTime.getDate();
+  var month = dateTime.getMonth();
+  var year = dateTime.getFullYear();
+
+  formatted_date = day + "-" + month + "-" + year;
+  datePair = {"formatted": formatted_date, "unformatted": date.getTime()};
+
+  return datePair;
+
+}
+
 function post(url, data) {
 
   fetch(url, {
@@ -95,3 +120,33 @@ function redirect(url, data) {
   document.location.href = newURL;
 
 }
+
+function getDateHeaders() {
+
+  var headers = document.querySelectorAll('.dateHeader');
+  console.log(headers);
+  
+  return headers;
+
+}
+
+function generateHeaderLinks(headers) {
+
+  var html = "";
+
+  for(var header of headers) {
+
+    console.log(header);
+    html += "<a href='#" + header.id + "' />" + header.innerHTML + "</a><br />";
+
+  }
+
+  document.getElementById("navbar").innerHTML = html;
+
+}
+
+
+
+
+
+

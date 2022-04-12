@@ -29,8 +29,29 @@
   height: 100%;
   width: 80vw;
 
-  margin-left: 10vw;
   margin-top: 5vh;
+
+}
+
+.navbar {
+
+  height: 100vh;
+  width: 10vw;
+  margin-top: 5vh;
+  margin-right: 10px;
+  padding-top: 5vh;
+  padding-left: 10px;
+
+  border-right: 1px dotted lightgrey;
+
+}
+
+.fullPage {
+
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
 
 }
 

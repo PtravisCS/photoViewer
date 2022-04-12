@@ -30,11 +30,15 @@
   </head>
 
   <body>
-    <div id="outer-container" class="buffer">
-      <div class="wrap-flex">
-        <?php
-          echo generateImages($images_relative);
-        ?>
+    <div class="fullPage">
+      <div class="navbar" id="navbar">
+      </div>
+      <div id="outer-container" class="buffer">
+        <div class="wrap-flex">
+          <?php
+            echo generateImages($images_relative);
+          ?>
+        </div>
       </div>
     </div>
   </body>
