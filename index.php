@@ -1,8 +1,11 @@
 <?php
 
-  $imagesDir = '/media/main/www/html/photoViewer/thumbs/';
+  require_once __DIR__ . '/index_functions.php';
 
-  $images_raw = glob($imagesDir . '*.{jpg,jpeg,png,gif,mp4}', GLOB_BRACE);
+  $images_dir = '/media/main/www/html/photoViewer/thumbs/';
+
+  $images_raw = getImages($images_dir);
+
   $images_relative = array("images" => [], "dates" => []); 
 
   foreach($images_raw as $image) {
@@ -11,6 +14,7 @@
     $images_relative["metadata"][] = exif_read_data($image, "FILE");
 
   } 
+
 
 ?>
 
@@ -27,15 +31,9 @@
 
   <body>
     <div id="outer-container" class="buffer">
-      <h3>Bay City Photos</h3>
       <div class="wrap-flex">
         <?php
-          for($i = 0; $i < Count($images_relative["images"]); $i++) {
-            $data = array("photoNum" => $i);
-            $encoded_data = json_encode($data);
-            $encoded_data = "'" . $encoded_data . "'";
-            echo '<img src="' . $images_relative["images"][$i] . '" name="' . $i . '" id="' . $i . '" class="thumbnail-photo" onClick=redirect(\'./slideShow.php\',' . $encoded_data . ') loading="lazy" />';
-          }
+          echo generateImages($images_relative);
         ?>
       </div>
     </div>
