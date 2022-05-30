@@ -39,10 +39,11 @@
   width: 10vw;
   margin-top: 5vh;
   margin-right: 10px;
-  padding-top: 5vh;
+  padding-top: 10vh;
   padding-left: 10px;
 
   border-right: 1px dotted lightgrey;
+  background-color: #fdfdff;
 
 }
 
