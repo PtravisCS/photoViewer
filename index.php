@@ -1,4 +1,12 @@
 <?php
+  
+  /*
+  exec("identify -verbose ./thumbs/IMG_20220316_150158.jpg", $output, $result);
+
+  echo '<pre>';
+  print_r($output[132]);
+  echo '</pre>';
+  */
 
   require_once __DIR__ . '/index_functions.php';
 
@@ -10,12 +18,16 @@
 
   foreach($images_raw as $image) {
 
-    $images_relative["images"][] = './img/' . basename($image);
-    $images_relative["metadata"][] = exif_read_data($image, "FILE");
+    $images_relative["images"][] = './thumbs/' . basename($image);
+
+    if (!str_contains(basename($image), ".mp4")) {
+      $images_relative["metadata"][] = exif_read_data($image, "FILE");
+    }
 
   } 
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
