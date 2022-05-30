@@ -11,6 +11,7 @@
     $images_relative["metadata"][] = exif_read_data($image, "FILE");
 
   } 
+
   
   if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["photoNum"])) {
 
@@ -54,6 +55,9 @@
           <img height="100px" onclick="forward_photo()" class="arrow" src="./right_arrow.png" />
         </div>  
       </div>
+    </div>
+    <div class="flex-container">
+      <p><?php echo $images_relative["metadata"][$seqnum]["COMPUTED"]["UserComment"] ?? "No Description"; ?></p>
     </div>
     <div class="flex-container">
       <p id="imgNum"></p>
