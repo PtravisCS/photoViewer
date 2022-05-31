@@ -13,6 +13,7 @@ function goto_photo(seqnum) {
   document.getElementById('date').innerHTML = dateTime;
   document.getElementById('imgNum').innerHTML = (seqnum + 1) + "/" + (images["images"].length);
   document.getElementById('title').innerHTML = images["images"][seqnum].replace("./img/","");
+  document.getElementById('description').innerHTML = images["metadata"][seqnum]["UserComment"] ?? "No Description";
 
   document.getElementById('backButton').setAttribute('href', 'index.php#' + seqnum);
 
