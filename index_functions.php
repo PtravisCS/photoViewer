@@ -1,5 +1,15 @@
 <?php
 
+  if (!function_exists('str_contains')) {
+
+    function str_contains (string $haystack, string $needle) {
+
+      return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+
+    }
+
+  }
+
   function getImages($images_dir) {
 
     $images_raw = glob($images_dir . '*.{jpg,jpeg,png,gif,mp4}', GLOB_BRACE);
@@ -38,6 +48,8 @@
 
   function generateImageHTML($images_relative, $i, $encoded_data) {
 
+    if (!str_contains($images_relative["images"][$i], ".mp4")) {
+
       $images_html = 
         '<img src="' .
         $images_relative["images"][$i] .
@@ -49,7 +61,16 @@
         $encoded_data .
         ') loading="lazy" />';
 
-      return $images_html;
+    } else {
+
+      $images_html = 
+        '<video class="thumbnail-photo" loading="lazy" controls>' .
+        '<source src="' . $images_relative["images"][$i] . '" />' .
+        '</video>';
+
+    }
+
+    return $images_html;
 
   }
 

@@ -57,12 +57,12 @@
       </div>
     </div>
     <div class="flex-container">
-      <p><?php echo $images_relative["metadata"][$seqnum]["COMPUTED"]["UserComment"] ?? "No Description"; ?></p>
-    </div>
-    <div class="flex-container">
       <p id="imgNum"></p>
       <p id="sep"></p>
       <p id="date"></p>
+    </div>
+    <div class="flex-container">
+      <p id="description"><?php echo $images_relative["metadata"][$seqnum]["UserComment"] ?? "No Description"; ?></p>
     </div>
   </body>
 
