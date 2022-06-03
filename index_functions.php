@@ -18,6 +18,15 @@
 
   }
 
+  function getVideoEpochStamp($video) {
+
+    preg_match("/(?P<DateTimeOriginal>20[0-9]{2}[0-1]{1}[0-9]{1}[0-3]{1}[0-9]{1})/", $video, $output);
+    $output["DateTimeOriginal"] = preg_replace("/([0-9]{4})([0-9]{2})([0-9]{2})/", "$1-$2-$3T", $output["DateTimeOriginal"]);
+
+    return $output;
+
+  }
+
   function getImageEpochStamp($images, $i) {
 
     $date = preg_replace("/([0-9]{4}):([0-9]{2}):([0-9]{2})/", "$1-$2-$3T", $images["metadata"][$i]["DateTimeOriginal"]);

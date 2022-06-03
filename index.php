@@ -22,6 +22,10 @@
 
     if (!str_contains(basename($image), ".mp4")) {
       $images_relative["metadata"][] = exif_read_data($image, "FILE");
+    } else {
+
+      $images_relative["metadata"][] = getVideoEpochStamp($image);
+
     }
 
   } 
