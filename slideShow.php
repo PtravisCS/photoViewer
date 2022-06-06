@@ -1,17 +1,25 @@
 <?php
 
+  require_once __DIR__ . '/dms.php';
+  require_once __DIR__ . '/getFileDate.php';
+
   $imagesDir = '/media/main/www/html/photoViewer/img/';
 
   $images_raw = glob($imagesDir . '*.{jpg,jpeg,png,gif,mp4}', GLOB_BRACE);
-  $images_relative = array("images" => [], "dates" => []); 
+  $images_relative = array("images" => [], "metadata" => []); 
 
-  foreach($images_raw as $image) {
+  for ($i = 0; $i < count($images_raw); $i++) {
+
+    $image = $images_raw[$i];
 
     $images_relative["images"][] = './img/' . basename($image);
-    $images_relative["metadata"][] = exif_read_data($image, "FILE");
+    if (str_contains(basename($image), ".jpg")) {
+      $images_relative["metadata"][] = exif_read_data($image, "FILE");
+    } else {
+      $images_relative["metadata"][$i]["DateTimeOriginal"] = getFileDate($images_relative["images"][$i]);
+    }
 
   } 
-
   
   if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["photoNum"])) {
 
@@ -50,7 +58,9 @@
         <div class="arrow">
           <img height="100px" onclick="back_photo()" class="arrow" src="./left_arrow.png" />
         </div> 
-        <img class="photo" id="mainImage" src=<?php echo '"' . $images_relative["images"][$seqnum] . '"'; ?> />
+        <div class="photo" id="content_port">
+          <img class="photo" id="mainImage" src=<?php echo '"' . $images_relative["images"][$seqnum] . '"'; ?> />
+        </div>
         <div class="arrow">
           <img height="100px" onclick="forward_photo()" class="arrow" src="./right_arrow.png" />
         </div>  
@@ -60,6 +70,9 @@
       <p id="imgNum"></p>
       <p id="sep"></p>
       <p id="date"></p>
+    </div>
+    <div class="flex-container">
+      <a href="" id="location">Location</a>
     </div>
     <div class="flex-container">
       <p id="description"><?php echo $images_relative["metadata"][$seqnum]["UserComment"] ?? "No Description"; ?></p>

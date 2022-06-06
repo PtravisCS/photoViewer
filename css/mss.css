@@ -85,6 +85,21 @@
 
 }
 
+.navbar_container {
+
+  width: 200px;
+  float: left;
+
+}
+
+.navbar {
+
+  position: fixed;
+  top: 5vh;
+  width: 100px;
+
+}
+
 #sep {
 
   margin-left: 1ch;
