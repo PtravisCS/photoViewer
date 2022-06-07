@@ -6,7 +6,9 @@
 
   function getImages($images_dir) {
 
-    $images_raw = glob($images_dir . '*.{jpg,jpeg,png,gif,mp4}', GLOB_BRACE);
+    //{jpg,jpeg,png,gif,mp4}
+    $images_raw = glob($images_dir . '*.*', GLOB_BRACE);
+    asort($images_raw);
 
     return $images_raw;
 

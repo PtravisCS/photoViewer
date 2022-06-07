@@ -4,7 +4,40 @@
 
   function getFileDate($image) {
 
-    return getImageEpochStamp($image) ?? getTitleTimeStamp($image);
+    return getExifTimeStamp($image) ?? /*getImgMagikTimeStamp($image) ??*/ getTitleTimeStamp($image);
+
+  }
+
+  function getImgMagikTimeStamp($image) {
+
+    $image = escapeshellarg($image);
+
+    if (str_contains(basename($image), ".mp4")) {
+
+      //exec("identify -verbose -ping ${image}[0] | grep ", $output, $result);
+      exec("ffprobe -v quiet $image -print_format json -show_entries stream=index,codec_type:stream_tags=creation_time:format_tags=creation_time | grep 'creation_time'", $output, $result);
+
+      $date = strtotime($date);
+
+      $date = date("Y-m-d", $date); //H:i:s
+
+      return $output[0];
+
+    }
+
+    exec("identify -verbose -ping $image | grep 'DateTimeOriginal'", $output, $result);
+
+    if (!$output) {
+      exec("identify -verbose -ping $image | grep 'GPSDateStamp'", $output, $result);
+    }
+
+    if (!$output) {
+      exec("identify -verbose -ping $image | grep 'DateTimeDigitized'", $output, $result);
+    }
+
+    if (!$output) {
+      return NULL;
+    } 
 
   }
 
@@ -20,7 +53,7 @@
 
   }
 
-  function getImageEpochStamp($image) {
+  function getExifTimeStamp($image) {
 
     if (str_contains(basename($image), ".jpg")) {
       $metadata = exif_read_data($image, "FILE");

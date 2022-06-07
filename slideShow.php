@@ -5,7 +5,9 @@
 
   $imagesDir = '/media/main/www/html/photoViewer/img/';
 
-  $images_raw = glob($imagesDir . '*.{jpg,jpeg,png,gif,mp4}', GLOB_BRACE);
+  //{jpg,jpeg,png,gif,mp4}
+  $images_raw = glob($imagesDir . '*.*', GLOB_BRACE);
+  asort($images_raw);
   $images_relative = array("images" => [], "metadata" => []); 
 
   for ($i = 0; $i < count($images_raw); $i++) {
