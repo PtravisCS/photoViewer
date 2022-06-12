@@ -58,13 +58,16 @@
 
 .thumbnail-photo {
 
-  max-height: 25vh;
-  min-height: 25vh;
+  height: 250px;
+  width: 250px;
   padding-left: 2px;
   padding-right: 3px;
   padding-bottom: 3px;
   padding-top: 2px;
   overflow: hidden;
+  /* Display a 250x250 background while the image loads to help hold its place, the image will display a rosette in this case */
+  background: url('data:image/svg+xml;utf8,%3Csvg width=\'250\' height=\'250\' viewBox=\'0 0 66.146 66.146\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath style=\'fill:none;stroke-width:.264583\' d=\'M382.162 67.865h66.146v66.146h-66.146z\' transform=\'translate(-382.162 -67.865)\'/%3E%3Ctext xml:space=\'preserve\' style=\'font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:51.2578px;font-family:Arial;-inkscape-font-specification:Arial;fill:%23000;stroke-width:.266967\' x=\'10.222\' y=\'50.868\'%3E%3Ctspan style=\'font-size:51.2578px;stroke-width:.266967\' x=\'10.222\' y=\'50.868\'%3E🏵%3C/tspan%3E%3C/text%3E%3C/svg%3E');
+
 
 }
 

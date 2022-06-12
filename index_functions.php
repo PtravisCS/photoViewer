@@ -33,10 +33,10 @@
 
   }
 
+
   function generateImageHTML($images_relative, $i, $encoded_data) {
 
     if (!str_contains($images_relative["images"][$i], ".mp4")) {
-
       $images_html = 
         '<img src="' .
         $images_relative["images"][$i] .
