@@ -25,7 +25,7 @@ function generateMapsURL(seqnum) {
 
   // https://www.google.com/maps/search/?api=1&query=43.14692%2C-80.26552 
 
-  console.log(images["metadata"][seqnum]);
+  //console.log(images["metadata"][seqnum]);
 
   var lat_deg = parseFloat(images["metadata"][seqnum]["GPSLatitude"][0]);
   var lat_min = parseFloat(images["metadata"][seqnum]["GPSLatitude"][1]);
@@ -48,7 +48,7 @@ function generateMapsURL(seqnum) {
   var lat_dec = lat_deg + (lat_min/60) + (lat_sec/3600);
   var long_dec = long_deg + (long_min/60) + (long_sec/3600);
 
-  console.log("Deg: " + lat_deg + " Min: " + lat_min + " Sec: " + lat_sec + " Dec: " + lat_dec);
+  //console.log("Deg: " + lat_deg + " Min: " + lat_min + " Sec: " + lat_sec + " Dec: " + lat_dec);
 
   return "https://www.google.com/maps/search/?api=1&query=" + lat_dec + "%2C" + long_dec; 
 
@@ -109,14 +109,16 @@ function forward_photo() {
 function get_dateTime(images, seqnum) {
 
   var dateTime = images["metadata"][seqnum]["DateTimeOriginal"];
+  console.log(dateTime);
+
   dateTime = dateTime.replace(/([0-9]{4}):([0-9]{2}):([0-9]{2}) /, "$1-$2-$3T");
   dateTime = dateTime + "Z";
   dateTime = new Date(dateTime);
 
   var day = dateTime.getDate();
-  var month = dateTime.getMonth();
+  var month = dateTime.getMonth() + 1;
   var year = dateTime.getFullYear();
-  var hour = dateTime.getHours() >= 10 ? dateTime.getHours(): '0' + dateTime.getHours();
+  var hour = dateTime.getHours() >= 10 ? dateTime.getHours() + 4: '0' + (dateTime.getHours() + 4);
   var min = dateTime.getMinutes() >= 10 ? dateTime.getMinutes(): '0' + dateTime.getMinutes();
 
   dateTime = day + "-" + month + "-" + year + "   " + hour + ":" + min;

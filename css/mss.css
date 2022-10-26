@@ -60,6 +60,8 @@
 
   height: 250px;
   width: 250px;
+  max-height: auto;
+  max-width: 25vw;
   padding-left: 2px;
   padding-right: 3px;
   padding-bottom: 3px;
