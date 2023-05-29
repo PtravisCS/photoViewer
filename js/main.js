@@ -195,12 +195,12 @@ function generateHeaderLinks(headers) {
   for(var header of headers) {
 
     console.log(header);
-    html += "<a href='#" + header.id + "' />" + header.innerHTML + "</a><br />";
+    html += "<a href='#" + header.id + "' class='nav-link' />" + header.innerHTML + "</a><br />";
 
   }
 
   if (html) {
-    document.getElementById("navbar").innerHTML = html;
+    document.getElementById("datebar").innerHTML = html;
   }
 
 }

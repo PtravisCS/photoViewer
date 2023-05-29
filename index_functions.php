@@ -14,7 +14,6 @@
 
   }
 
-
   function encodeJsonArray($i) {
 
       $data = array("photoNum" => $i);
@@ -32,7 +31,6 @@
     return $header_html;
 
   }
-
 
   function generateImageHTML($images_relative, $i, $encoded_data) {
 

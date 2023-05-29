@@ -27,30 +27,18 @@
 .buffer {
 
   height: 100%;
+  /*
   width: 100vw;
+  */
 
   margin-top: 5vh;
-
-}
-
-.navbar {
-
-  height: 100vh;
-  width: 10vw;
-  margin-top: 5vh;
-  margin-right: 10px;
-  padding-top: 10vh;
-  padding-left: 10px;
-
-  border-right: 1px dotted lightgrey;
-  background-color: #fdfdff;
 
 }
 
 .fullPage {
 
   height: 100%;
-  width: 100vw;
+  width: 95vw;
   display: flex;
   flex-direction: row;
 
@@ -81,7 +69,8 @@
 
 }
 
-.wrapp-flex {
+/*
+.wrap-flex {
 
   display: flex;
   flex-direction: row;
@@ -89,19 +78,28 @@
   align-items: center;
 
 }
+*/
 
-.navbar_container {
+.datebar_container {
 
-  width: 200px;
+  width: 100px;
+  height: 100svh;
+  margin-right: 20px;
   float: left;
 
 }
 
-.navbar {
+#datebar {
 
-  position: fixed;
-  top: 5vh;
-  width: 100px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 56px;
+
+  border-right: 1px dotted lightgrey;
+  background-color: #fdfdff;
+
+  height: 90svh;
+  overflow: auto;
 
 }
 

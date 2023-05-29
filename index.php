@@ -2,32 +2,19 @@
   
   //require_once __DIR__ . '/magikMetaData.php';
   require_once __DIR__ . '/index_functions.php';
+  require_once __DIR__ . '/../shared_tools/common_functions.php';
 
-  /*
-  exec("identify -verbose ./thumbs/IMG_20220316_150158.jpg", $output, $result);
+  session_start();
 
-  $meta = new magikMetaData();
-
-  foreach ($output as $indice) {
-
-    $arr = explode(":", $indice);
-    $result = array();
-
-    for ($i = 0; $i < count($arr) - 1; $i++) {
-      $arr[$i] = preg_replace("/(\S)\s{1,}/m", "$1", $arr[$i]);
-      //$meta->{$arr[0] . $arr[1]} = $arr[1];
-
-      //echo $arr[$i];
-    }
-
-    //echo "<br />";
-
+  if (is_logged_in()) {
+    $username = $_SESSION['username'];
+    $profile_picture = $_SESSION['profile_picture'];
+    is_admin(); 
   }
-
-  echo '<pre>';
-  print_r($output);
-  echo '</pre>';
-   */
+  else {
+    $username = '';
+    $profile_picture = '';
+  }
 
   $images_dir = '/media/main/www/html/photoViewer/thumbs/';
 
@@ -48,26 +35,40 @@
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <title>Photos</title>
     <link rel="stylesheet" href="./css/mss.css" />
+    <?php bootstrap_css(); ?>
     <script type="text/javascript">
       var images = <?php echo json_encode($images_relative); ?>;
     </script>
   </head>
 
   <body>
-    <div class="fullPage">
-      <div class="navbar_container">
-        <div class="navbar" id="navbar">
-        </div> 
+    <?php print_navbar($profile_picture, $username); ?>
+      <?php if (is_logged_in()) { ?>
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-4">
+                <form action="./upload.php" method="post" enctype="multipart/form-data">
+                  <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="files[]" id="files" multiple />
+                    <input type="submit" class="btn btn-primary" value="Upload File" name="submit">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php } ?>
+    <div class="row">
+      <div class="nav nav-pills col-1 ps-2" id="datebar">
       </div>
-      <div id="outer-container" class="buffer">
-        <div class="wrap-flex">
+      <div class="col-11">
+        <div data-bs-spy="scroll" data-bs-target="#datebar" data-bs-smooth-scroll="true" class="scrollspy-example-2" tabindex="0">
           <?php
             echo generateImages($images_relative);
           ?>
@@ -77,5 +78,5 @@
   </body>
 
   <script src="./js/main.js"></script>
-
+  <?php bootstrap_js(); ?>
 </html>
