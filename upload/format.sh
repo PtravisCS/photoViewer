@@ -14,7 +14,7 @@ count=(`find ./ -maxdepth 1 -name "*.mp4"`)
 
 if [ ${#count[@]} -gt 0 ]; then
 
-	for f in *.mp4; do mv "$f" "$(echo "$f" | sed s/VID/IMG/)"; done
+  for f in *.mp4; do mv "$f" "$(echo "$f" | sed -E s/VID/IMG/I)"; done
 
 	for i in *.mp4; do
 	    [ -f "$i" ] || break
@@ -27,5 +27,3 @@ if [ ${#count[@]} -gt 0 ]; then
 	mv ./*.mp4 ../img/
 
 fi
-
-return 0
