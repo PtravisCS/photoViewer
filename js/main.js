@@ -1,7 +1,11 @@
-if (document.getElementById('title'))
+
+if (document.getElementById('title')) {
   document.getElementById('title').innerHTML = images["images"][0].replace("./img/","");
-if (document.getElementById('sep'))
+}
+
+if (document.getElementById('sep')) {
   document.getElementById('sep').innerHTML = "|";
+}
 
 generateHeaderLinks(getDateHeaders());
 
@@ -27,30 +31,37 @@ function generateMapsURL(seqnum) {
 
   //console.log(images["metadata"][seqnum]);
 
-  var lat_deg = parseFloat(images["metadata"][seqnum]["GPSLatitude"][0]);
-  var lat_min = parseFloat(images["metadata"][seqnum]["GPSLatitude"][1]);
-  var lat_sec = parseFloat(images["metadata"][seqnum]["GPSLatitude"][2]) / 10000;
-  if (images["metadata"][seqnum]["GPSLatitudeRef"] == "S") {
-    lat_deg *= -1;
-    lat_min *= -1;
-    lat_sec *= -1;
+  if (images["metadata"][seqnum]?.GPSLatitude) {
+
+    var lat_deg = parseFloat(images["metadata"][seqnum]["GPSLatitude"][0]);
+    var lat_min = parseFloat(images["metadata"][seqnum]["GPSLatitude"][1]);
+    var lat_sec = parseFloat(images["metadata"][seqnum]["GPSLatitude"][2]) / 10000;
+    if (images["metadata"][seqnum]["GPSLatitudeRef"] == "S") {
+      lat_deg *= -1;
+      lat_min *= -1;
+      lat_sec *= -1;
+    }
+
+    var long_deg = parseFloat(images["metadata"][seqnum]["GPSLongitude"][0]);
+    var long_min = parseFloat(images["metadata"][seqnum]["GPSLongitude"][1]);
+    var long_sec = parseFloat(images["metadata"][seqnum]["GPSLongitude"][2]) / 10000;
+    if (images["metadata"][seqnum]["GPSLongitudeRef"] == "W") {
+      long_deg *= -1;
+      long_min *= -1;
+      long_sec *= -1;
+    }
+
+    var lat_dec = lat_deg + (lat_min/60) + (lat_sec/3600);
+    var long_dec = long_deg + (long_min/60) + (long_sec/3600);
+
+    //console.log("Deg: " + lat_deg + " Min: " + lat_min + " Sec: " + lat_sec + " Dec: " + lat_dec);
+
+    return "https://www.google.com/maps/search/?api=1&query=" + lat_dec + "%2C" + long_dec; 
+
+  } else {
+
+    return "#";
   }
-
-  var long_deg = parseFloat(images["metadata"][seqnum]["GPSLongitude"][0]);
-  var long_min = parseFloat(images["metadata"][seqnum]["GPSLongitude"][1]);
-  var long_sec = parseFloat(images["metadata"][seqnum]["GPSLongitude"][2]) / 10000;
-  if (images["metadata"][seqnum]["GPSLongitudeRef"] == "W") {
-    long_deg *= -1;
-    long_min *= -1;
-    long_sec *= -1;
-  }
-
-  var lat_dec = lat_deg + (lat_min/60) + (lat_sec/3600);
-  var long_dec = long_deg + (long_min/60) + (long_sec/3600);
-
-  //console.log("Deg: " + lat_deg + " Min: " + lat_min + " Sec: " + lat_sec + " Dec: " + lat_dec);
-
-  return "https://www.google.com/maps/search/?api=1&query=" + lat_dec + "%2C" + long_dec; 
 
 }
 
@@ -108,43 +119,52 @@ function forward_photo() {
 
 function get_dateTime(images, seqnum) {
 
-  var dateTime = images["metadata"][seqnum]["DateTimeOriginal"];
-  console.log(dateTime);
+  if (images["metadata"][seqnum]?.DateTimeOriginal) {
 
-  dateTime = dateTime.replace(/([0-9]{4}):([0-9]{2}):([0-9]{2}) /, "$1-$2-$3T");
-  dateTime = dateTime + "Z";
-  dateTime = new Date(dateTime);
+    var dateTime = images["metadata"][seqnum]["DateTimeOriginal"];
+    //console.log(dateTime);
 
-  var day = dateTime.getDate();
-  var month = dateTime.getMonth() + 1;
-  var year = dateTime.getFullYear();
-  var hour = dateTime.getHours() >= 10 ? dateTime.getHours() + 4: '0' + (dateTime.getHours() + 4);
-  var min = dateTime.getMinutes() >= 10 ? dateTime.getMinutes(): '0' + dateTime.getMinutes();
+    dateTime = dateTime.replace(/([0-9]{4}):([0-9]{2}):([0-9]{2}) /, "$1-$2-$3T");
+    dateTime = dateTime + "Z";
+    dateTime = new Date(dateTime);
 
-  dateTime = day + "-" + month + "-" + year + "   " + hour + ":" + min;
+    var day = dateTime.getDate();
+    var month = dateTime.getMonth() + 1;
+    var year = dateTime.getFullYear();
+    var hour = dateTime.getHours() >= 10 ? dateTime.getHours(): '0' + (dateTime.getHours());
+    var min = dateTime.getMinutes() >= 10 ? dateTime.getMinutes(): '0' + dateTime.getMinutes();
 
-  return dateTime;
+    dateTime = day + "-" + month + "-" + year + "   " + hour + ":" + min;
 
+    return dateTime;
+
+  } else {
+
+    return "Date Time Not Available";
+  }
 }
 
 function get_date(images, seqnum) {
 
-  console.log(date);
-  var date = images["metadata"][seqnum]["DateTimeOriginal"];
-  date = date.replace(/([0-9]{4}):([0-9]{2}):([0-9]{2}) /, "$1-$2-$3T");
-  date = date.replace(/T.*/);
-  console.log(date);
+  if (images["metadata"][seqnum]?.DateTimeOriginal) {
+    var date = images["metadata"][seqnum]["DateTimeOriginal"];
+    date = date.replace(/([0-9]{4}):([0-9]{2}):([0-9]{2}) /, "$1-$2-$3T");
+    date = date.replace(/T.*/);
 
-  date = new Date(date);
+    date = new Date(date);
 
-  var day = dateTime.getDate();
-  var month = dateTime.getMonth();
-  var year = dateTime.getFullYear();
+    var day = dateTime.getDate();
+    var month = dateTime.getMonth();
+    var year = dateTime.getFullYear();
 
-  formatted_date = day + "-" + month + "-" + year;
-  datePair = {"formatted": formatted_date, "unformatted": date.getTime()};
+    formatted_date = day + "-" + month + "-" + year;
+    datePair = {"formatted": formatted_date, "unformatted": date.getTime()};
 
-  return datePair;
+    return datePair;
+  } else {
+
+    return "";
+  }
 
 }
 

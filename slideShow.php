@@ -2,34 +2,49 @@
 
   require_once __DIR__ . '/dms.php';
   require_once __DIR__ . '/getFileDate.php';
+  require_once __DIR__ . '/index_functions.php';
+  require_once __DIR__ . '/../shared_tools/common_functions.php';
+
+  session_start();
+
+  if (is_logged_in()) {
+    $username = $_SESSION['username'];
+    $profile_picture = $_SESSION['profile_picture'];
+    is_admin(); 
+  }
+  else {
+    $username = '';
+    $profile_picture = '';
+  }
 
   $imagesDir = '/media/main/www/html/photoViewer/img/';
 
   //{jpg,jpeg,png,gif,mp4}
   $images_raw = glob($imagesDir . '*.*', GLOB_BRACE);
   asort($images_raw);
-  $images_relative = array("images" => [], "metadata" => []); 
+  $num_images = count($images_raw);
+  $images_relative = ['images' => [], 'metadata' => []]; 
 
-  for ($i = 0; $i < count($images_raw); $i++) {
+  for ($i = 0; $i < $num_images; $i++) {
 
     $image = $images_raw[$i];
 
-    $images_relative["images"][] = './img/' . basename($image);
-    if (str_contains(basename($image), ".jpg")) {
-      $images_relative["metadata"][] = exif_read_data($image, "FILE");
+    $images_relative['images'][] = './img/' . basename($image);
+    if (str_contains(basename($image), '.jpg')) {
+      $images_relative['metadata'][] = exif_read_data($image, 'FILE');
     } else {
-      $images_relative["metadata"][$i]["DateTimeOriginal"] = getFileDate($images_relative["images"][$i]);
+      $images_relative['metadata'][$i]['DateTimeOriginal'] = getFileDate($images_relative['images'][$i]);
     }
 
   } 
   
-  if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["photoNum"])) {
+  if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['photoNum'])) {
 
-    $seqnum = $_POST["photoNum"];
+    $seqnum = $_POST['photoNum'];
 
-  } else if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET["photoNum"])) {
+  } elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['photoNum'])) {
 
-    $seqnum = $_GET["photoNum"] == "undefined"? 0: $_GET["photoNum"];
+    $seqnum = $_GET['photoNum'] == 'undefined' ? 0 : $_GET['photoNum'];
 
   } else {
 
@@ -45,6 +60,7 @@
   <head>
   <title id="title"></title>
     <link rel="stylesheet" href="./css/mss.css" />
+    <?php bootstrap_css(); ?>
     <script type="text/javascript">
       var images = <?php echo json_encode($images_relative); ?>;
       var photoNum = <?php echo $seqnum ?>;
@@ -52,6 +68,7 @@
   </head>
 
   <body>
+    <?php print_navbar($profile_picture, $username); ?>
     <div>
       <a id="backButton" href="index.php#<?php echo $seqnum ?>"/>Back</a>
     </div>
@@ -68,16 +85,27 @@
         </div>  
       </div>
     </div>
-    <div class="flex-container">
-      <p id="imgNum"></p>
-      <p id="sep"></p>
-      <p id="date"></p>
+    <div class="container mb-1 mt-2">
+      <div class="card">
+        <div class="card card-body">
+          <div class="flex-container">
+            <p id="imgNum"></p>
+            <p id="sep"></p>
+            <p id="date"></p>
+          </div>
+          <div class="flex-container">
+            <a href="" id="location">Location</a>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="flex-container">
-      <a href="" id="location">Location</a>
-    </div>
-    <div class="flex-container">
-      <p id="description"><?php echo $images_relative["metadata"][$seqnum]["UserComment"] ?? "No Description"; ?></p>
+    <div class="container mb-3">
+      <div class="card">
+        <div class="card card-body">
+          <p id="description"><?php echo $images_relative["metadata"][$seqnum]["UserComment"] ?? "No Description"; ?>
+          </p>
+        </div>
+      </div>
     </div>
   </body>
 
