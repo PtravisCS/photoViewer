@@ -35,24 +35,16 @@
   function generateImageHTML($images_relative, $i, $encoded_data) {
 
     if (!str_contains($images_relative["images"][$i], ".mp4")) {
-      $images_html = 
-        '<img src="' .
-        $images_relative["images"][$i] .
-        '" name="' .
-        $i .
-        '" id="' .
-        $i .
-        '" class="thumbnail-photo" onClick=redirect(\'./slideShow.php\',' .
-        $encoded_data .
-        ') loading="lazy" />';
-
+      $images_html =
+        //'<img src="'.$images_relative["images"][$i].'" name="'.$i.'" id="'.$i.
+        //'" class="thumbnail-photo" onClick=redirect(\'./slideShow.php\','.$encoded_data .') loading="lazy" />';
+        '<img src="./thumb.php?img='.basename($images_relative['images'][$i], '.jpg').'" name="'.$i.'" id="'.$i.
+        '" class="thumbnail-photo" onClick=redirect(\'./slideShow.php\','.$encoded_data .') loading="lazy" />';
     } else {
-
-      $images_html = 
+      $images_html =
         '<video class="thumbnail-photo" id="' . $i . '" loading="lazy" controls>' .
         '<source src="' . $images_relative["images"][$i] . '" />' .
         '</video>';
-
     }
 
     return $images_html;

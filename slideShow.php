@@ -17,7 +17,7 @@
     $profile_picture = '';
   }
 
-  $imagesDir = '/media/main/www/html/photoViewer/img/';
+  $imagesDir = __DIR__ . '/img/';
 
   //{jpg,jpeg,png,gif,mp4}
   $images_raw = glob($imagesDir . '*.*', GLOB_BRACE);

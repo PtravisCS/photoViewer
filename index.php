@@ -16,7 +16,7 @@
     $profile_picture = '';
   }
 
-  $images_dir = '/media/main/www/html/photoViewer/thumbs/';
+  $images_dir = __DIR__ . '/thumbs/';
 
   $images_raw = getImages($images_dir);
 

@@ -44,10 +44,14 @@
   function getTitleTimeStamp($image) {
 
     preg_match("/(?P<DateTimeOriginal>20[0-9]{2}[0-1]{1}[0-9]{1}[0-3]{1}[0-9]{1}_[0-9]{6})/", basename($image), $output);
-    $date = preg_replace("/([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{6})/", "$1-$2-$3T$4", $output["DateTimeOriginal"]);
-    $date = strtotime($date);
-
-    $date = date("Y-m-d", $date); //H:i:s
+    if (isset($output["DateTimeOriginal"])) {
+      $date = preg_replace("/([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{6})/", "$1-$2-$3T$4", $output["DateTimeOriginal"]);
+      $date = strtotime($date);
+      $date = date("Y-m-d", $date); //H:i:s
+    }
+    else {
+      $date = "1970-01-01";
+    }
 
     return $date;
 
