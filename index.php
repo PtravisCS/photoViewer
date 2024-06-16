@@ -16,14 +16,14 @@
     $profile_picture = '';
   }
 
-  $images_dir = __DIR__ . '/thumbs/';
+  $images_dir = __DIR__ . '/img/';
 
   $images_raw = getImages($images_dir);
 
   $images_relative = array("images" => [], "metadata" => []); 
 
   foreach($images_raw as $image) {
-    $images_relative["images"][] = './thumbs/' . true_basename($image);
+    $images_relative["images"][] = './img/' . true_basename($image);
 
     if (str_contains($image, ".jpg")) {
       $metadata = exif_read_data($image, "FILE") ;
