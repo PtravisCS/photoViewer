@@ -4,7 +4,7 @@
   require_once __DIR__ . '/str_contains.php';
 
   function true_basename($image) {
-    $formats = ['.jpg', '.png', '.gif', '.apng', '.avif', '.jpeg', '.svg', '.webp', '.bmp', '.tiff', '.mp4'];
+    $formats = ['.jpg', '.png', '.gif', '.apng', '.avif', '.jpeg', '.svg', '.webp', '.bmp', '.tiff', '.mp4', '.ogg'];
     $img = $image;
 
     foreach ($formats as $format) {
@@ -16,40 +16,38 @@
 
 
   function getImages($images_dir) {
-
     //{jpg,jpeg,png,gif,mp4}
     $images_raw = glob($images_dir . '*.*', GLOB_BRACE);
     asort($images_raw);
 
     return $images_raw;
-
   }
 
   function encodeJsonArray($i) {
-
       $data = array("photoNum" => $i);
       $encoded_data = json_encode($data);
       $encoded_data = "'" . $encoded_data . "'";
 
       return $encoded_data;
-
   }
 
   function generateHeaderHTML($date, $j) {
-
     $header_html = '<h3 id="' . 'date' . $j . '" class="dateHeader" >' . $date . '</h3>';
 
     return $header_html;
-
   }
 
   function generateImageHTML($images_relative, $i, $encoded_data) {
+    $image = $images_relative['images'][$i];
+    $image_formats = ['jpg', 'png', 'gif', 'apng', 'avif', 'jpeg', 'svg', 'webp', 'bmp', 'tiff'];
+    $ext = pathinfo($image)['extension'];
+    $images_html = '';
 
-    if (!str_contains($images_relative["images"][$i], ".mp4")) {
+    if (!in_array($ext, $image_formats)) {
       $images_html =
         //'<img src="'.$images_relative["images"][$i].'" name="'.$i.'" id="'.$i.
         //'" class="thumbnail-photo" onClick=redirect(\'./slideShow.php\','.$encoded_data .') loading="lazy" />';
-        '<img src="./thumb.php?img='.basename($images_relative['images'][$i], '.jpg').'" name="'.$i.'" id="'.$i.
+        '<img src="./thumb.php?img='.basename($image, '.jpg').'" name="'.$i.'" id="'.$i.
         '" class="thumbnail-photo" onClick=redirect(\'./slideShow.php\','.$encoded_data .') loading="lazy" />';
     } else {
       $images_html =
@@ -59,11 +57,9 @@
     }
 
     return $images_html;
-
   }
 
   function generateImages($images_relative) {
-
     $images_html = "";
 
     $date = getFileDate($images_relative["images"][0]);
@@ -72,23 +68,18 @@
     $images_html = $images_html . generateHeaderHTML($date, $j);
 
     for($i = 0; $i < Count($images_relative["images"]); $i++) {
-
       if ($date != (getFileDate($images_relative["images"][$i]))) {
-
         $j++;
         $date = getFileDate($images_relative["images"][$i]);
         $images_html = $images_html . generateHeaderHTML($date, $j);
-
       }
 
       $encoded_data = encodeJsonArray($i);
 
       $images_html = $images_html . generateImageHTML($images_relative, $i, $encoded_data);
-
     }
 
     return $images_html;
-
   }
 
 ?>

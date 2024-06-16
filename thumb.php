@@ -37,19 +37,41 @@
     die;
   }
   elseif ($is_image) {
-    $str = file_get_contents($dir.$img);
+    $str = file_get_contents($dir.$img); 
+    $metadata = @exif_read_data($dir.$img, 'FILE'); 
 
     $file = imagecreatefromstring($str);
     $width = imagesx($file);
     $height= imagesy($file);
 
-    $new_file = imagecreatetruecolor(250, 250);
+    $gd_image = imagecreatetruecolor(250, 250);
 
-    imagecopyresampled($new_file, $file, 0, 0, 0, 0, 250, 250, $width, $height);
+    imagecopyresampled($gd_image, $file, 0, 0, 0, 0, 250, 250, $width, $height);
 
-    header('Content-type:image');
-    imagejpeg($new_file);
+    $num = rand(0, 100000);
+    $filename = '/tmp/photoviewer'.$num.'.jpg';
 
+    $orientation = $metadata['Orientation'];
+    
+    switch($orientation) {
+      case 3:
+        $gd_image = imagerotate($gd_image, -180, 0);
+        break;
+      case 6:
+        $gd_image = imagerotate($gd_image, -90, 0);
+        break;
+      case 8:
+        $gd_image = imagerotate($gd_image, -270, 0);
+        break;
+    }
+
+    imagejpeg($gd_image, $filename, 100);
+
+    exec('exiftool -DateTimeOriginal=\''.$metadata['DateTimeOriginal'].'\' -Orientation \'1\' -- '.$filename, $output);
+    $final_file = file_get_contents($filename);
+
+    header('Content-type: image/jpg');
+    echo $final_file;
     die;
   }
   elseif ($is_video) {
@@ -68,12 +90,12 @@
     $width = imagesx($file);
     $height= imagesy($file);
 
-    $new_file = imagecreatetruecolor(250, 250);
+    $gd_image = imagecreatetruecolor(250, 250);
 
-    imagecopyresampled($new_file, $file, 0, 0, 0, 0, 250, 250, $width, $height);
+    imagecopyresampled($gd_image, $file, 0, 0, 0, 0, 250, 250, $width, $height);
 
     header('Content-type:image');
-    imagejpeg($new_file);
+    imagejpeg($gd_image);
 
     die;
   }

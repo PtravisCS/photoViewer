@@ -14,18 +14,25 @@ if [ ${#file_list[@]} -gt 0 ]; then
 
 fi
 
-# Get a list of pictures, copy the original to ../img and
-# make a thumnail version and place it in ../thumbs
-count=(`find ./ -maxdepth 1 -name "*.jpg"`)
+# Get a list of pictures, copy the original to ../img
+formats=( 'jpg' 'png' 'gif' 'apng' 'avif' 'jpeg' 'svg' 'webp' 'bmp' 'tiff' )
 
-if [ ${#count[@]} -gt 0 ]; then
+for i in "${formats[@]}"; do
+  count=(`find ./ -maxdepth 1 -name "*.$i"`)
 
-  rename 's/img/IMG/' ./*.jpg
-	mv ./*.jpg ../img/ 
-	#mogrify -resize 250x250 *.jpg 
-	#mv ./*.jpg ../thumbs/
+  if [ ${#count[@]} -gt 0 ]; then
+    rename 's/img/IMG/' "./*.$i"
 
-fi
+    for j in *."$i"; do
+      [ -f "$j" ] || break
+      
+      exiftool -if 'not defined $DateTimeOriginal' -DateTimeOriginal=now -overwrite_original -- ./"$j" &> /dev/null
+      #mv "$j" "$(date +%Y%m%dT%H%M%S%3N%z).$i"
+    done
+
+    mv ./*."$i" ../img/ 
+  fi
+done
 
 # Get a list of movies, copy the original to ../img and
 # grab a frame from the start of the movie to use as a thumbnail

@@ -17,16 +17,17 @@
   }
 
   $images_dir = __DIR__ . '/img/';
-
   $images_raw = getImages($images_dir);
-
   $images_relative = array("images" => [], "metadata" => []); 
+  $image_formats = ['jpg', 'png', 'gif', 'apng', 'avif', 'jpeg', 'svg', 'webp', 'bmp', 'tiff'];
 
   foreach($images_raw as $image) {
     $images_relative["images"][] = './img/' . true_basename($image);
+    $ext = pathinfo($image)['extension'];
 
-    if (str_contains($image, ".jpg")) {
-      $metadata = exif_read_data($image, "FILE") ;
+    //if (str_contains($image, ".jpg")) {
+    if (in_array($ext, $image_formats)) {
+      $metadata = @exif_read_data($image, "FILE") ;
       $images_relative["metadata"][] = $metadata;
     } 
   } 
