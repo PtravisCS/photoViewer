@@ -23,14 +23,12 @@
   $images_relative = array("images" => [], "metadata" => []); 
 
   foreach($images_raw as $image) {
+    $images_relative["images"][] = './thumbs/' . true_basename($image);
 
-    $images_relative["images"][] = './thumbs/' . basename($image);
-
-    if (str_contains(basename($image), ".jpg")) {
+    if (str_contains($image, ".jpg")) {
       $metadata = exif_read_data($image, "FILE") ;
       $images_relative["metadata"][] = $metadata;
     } 
-
   } 
 
 ?>

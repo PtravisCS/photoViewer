@@ -3,6 +3,17 @@
   require_once __DIR__ . '/getFileDate.php';
   require_once __DIR__ . '/str_contains.php';
 
+  function true_basename($image) {
+    $formats = ['.jpg', '.png', '.gif', '.apng', '.avif', '.jpeg', '.svg', '.webp', '.bmp', '.tiff', '.mp4'];
+    $img = $image;
+
+    foreach ($formats as $format) {
+      $img = basename($img, $format);
+    }
+
+    return $img;
+  }
+
 
   function getImages($images_dir) {
 
