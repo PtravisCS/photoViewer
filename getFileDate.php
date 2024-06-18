@@ -1,5 +1,4 @@
 <?php
-
   require_once __DIR__ . '/str_contains.php';
 
   function getFileDate($image) {
@@ -52,9 +51,10 @@
 
   function getExifTimeStamp($image) {
     $metadata = exif_read_data($image, "FILE");
+    $dt = $metadata['DateTimeOriginal'];
 
-    if (isset($metadata["DateTimeOriginal"])) {
-      $date = preg_replace("/([0-9]{4}):([0-9]{2}):([0-9]{2})/", "$1-$2-$3T", $metadata["DateTimeOriginal"]);
+    if (isset($dt)) {
+      $date = preg_replace("/([0-9]{4}):([0-9]{2}):([0-9]{2})/", "$1-$2-$3T", $dt);
       $date = preg_replace("/T.*/", "", $date);
       strtotime($date);
     } else {

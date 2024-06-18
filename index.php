@@ -1,7 +1,7 @@
 <?php
   
-  //require_once __DIR__ . '/magikMetaData.php';
   require_once __DIR__ . '/index_functions.php';
+  require_once __DIR__ . '/getFileDate.php';
   require_once __DIR__ . '/../shared_tools/common_functions.php';
 
   session_start();
@@ -18,20 +18,26 @@
 
   $images_dir = __DIR__ . '/img/';
   $images_raw = getImages($images_dir);
-  $images_relative = array("images" => [], "metadata" => []); 
+  $images_relative = [];
   $image_formats = ['jpg', 'png', 'gif', 'apng', 'avif', 'jpeg', 'svg', 'webp', 'bmp', 'tiff'];
 
   foreach($images_raw as $image) {
-    $images_relative["images"][] = './img/' . true_basename($image);
+    $item = [];
+    $item['img'] = './img/'.true_basename($image);
+    $item['date'] = getFileDate($image);
+
     $ext = pathinfo($image)['extension'];
 
     //if (str_contains($image, ".jpg")) {
     if (in_array($ext, $image_formats)) {
       $metadata = @exif_read_data($image, "FILE") ;
-      $images_relative["metadata"][] = $metadata;
+      $item['metadata'] = $metadata;
     } 
+
+    $images_relative[] = $item;
   } 
 
+  usort($images_relative, fn($item1, $item2) => $item1['date'] <=> $item2['date']);
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +47,8 @@
     <link rel="stylesheet" href="./css/mss.css" />
     <?php bootstrap_css(); ?>
     <script type="text/javascript">
-      var images = <?php echo json_encode($images_relative); ?>;
+      var images = <?php echo json_encode($images_relative, JSON_NUMERIC_CHECK | JSON_INVALID_UTF8_IGNORE); ?>;
+      <?php echo json_last_error(); ?>
     </script>
   </head>
 

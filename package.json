@@ -1,0 +1,22 @@
+{
+  "name": "photoviewer",
+  "version": "1.0.0",
+  "description": "Displays photos in a grid and a slideshow.",
+  "main": "./js/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PtravisCS/photoViewer.git"
+  },
+  "author": "Paul Travis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PtravisCS/photoViewer/issues"
+  },
+  "homepage": "https://github.com/PtravisCS/photoViewer#readme",
+  "devDependencies": {
+    "eslint": "^9.5.0"
+  }
+}

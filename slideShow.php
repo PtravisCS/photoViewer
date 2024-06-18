@@ -1,5 +1,4 @@
 <?php
-
   require_once __DIR__ . '/dms.php';
   require_once __DIR__ . '/getFileDate.php';
   require_once __DIR__ . '/index_functions.php';
@@ -21,37 +20,33 @@
 
   //{jpg,jpeg,png,gif,mp4}
   $images_raw = glob($imagesDir . '*.*', GLOB_BRACE);
-  asort($images_raw);
   $num_images = count($images_raw);
-  $images_relative = ['images' => [], 'metadata' => []]; 
+  $images_relative = [];
 
   for ($i = 0; $i < $num_images; $i++) {
 
     $image = $images_raw[$i];
+    $item = [];
 
-    $images_relative['images'][] = './img/' . basename($image);
+    $item['img'] = './img/'.basename($image);
+    $item['date'] = getFileDate($item['img']);
+
     if (str_contains(basename($image), '.jpg')) {
-      $images_relative['metadata'][] = exif_read_data($image, 'FILE');
+      $item['metadata'] = exif_read_data($image, 'FILE');
     } else {
-      $images_relative['metadata'][$i]['DateTimeOriginal'] = getFileDate($images_relative['images'][$i]);
+      $item['metadata']['DateTimeOriginal'] = $item['date'];
     }
 
+    $images_relative[] = $item;
   } 
+
+  usort($images_relative, fn($item1, $item2) => $item1['date'] <=> $item2['date']);
   
-  if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['photoNum'])) {
+  $seqnum = 0;
+  if (isset($_POST['photoNum'])) { $seqnum = $_POST['photoNum']; } 
+  elseif (isset($_GET['photoNum'])) { $seqnum = $_GET['photoNum'] == 'undefined' ? 0 : $_GET['photoNum']; } 
 
-    $seqnum = $_POST['photoNum'];
-
-  } elseif ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['photoNum'])) {
-
-    $seqnum = $_GET['photoNum'] == 'undefined' ? 0 : $_GET['photoNum'];
-
-  } else {
-
-    $seqnum = 0;
-
-  }
-
+  if (!is_numeric($seqnum)) { $seqnum = 0; }
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +57,7 @@
     <link rel="stylesheet" href="./css/mss.css" />
     <?php bootstrap_css(); ?>
     <script type="text/javascript">
-      var images = <?php echo json_encode($images_relative); ?>;
+      var images = <?php echo json_encode($images_relative, JSON_NUMERIC_CHECK | JSON_INVALID_UTF8_IGNORE); ?>;
       var photoNum = <?php echo $seqnum ?>;
     </script>
   </head>
@@ -78,7 +73,7 @@
           <img height="100px" onclick="back_photo()" class="arrow" src="./left_arrow.png" />
         </div> 
         <div class="photo" id="content_port">
-          <img class="photo" id="mainImage" src=<?php echo '"' . $images_relative["images"][$seqnum] . '"'; ?> />
+          <img class="photo" id="mainImage" src=<?php echo '"'.$images_relative[$seqnum]['img'].'"'; ?> />
         </div>
         <div class="arrow">
           <img height="100px" onclick="forward_photo()" class="arrow" src="./right_arrow.png" />
@@ -102,7 +97,7 @@
     <div class="container mb-3">
       <div class="card">
         <div class="card card-body">
-          <p id="description"><?php echo $images_relative["metadata"][$seqnum]["UserComment"] ?? "No Description"; ?>
+          <p id="description"><?php echo $images_relative[$seqnum]["metadata"]["UserComment"] ?? "No Description"; ?>
           </p>
         </div>
       </div>

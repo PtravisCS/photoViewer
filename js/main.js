@@ -1,6 +1,5 @@
-
 if (document.getElementById('title')) {
-  document.getElementById('title').innerHTML = images["images"][0].replace("./img/","");
+  document.getElementById('title').innerHTML = images[0]['img'].replace("./img/","");
 }
 
 if (document.getElementById('sep')) {
@@ -15,10 +14,10 @@ function goto_photo(seqnum) {
 
   document.getElementById('content_port').innerHTML = generateContent(seqnum);
   document.getElementById('date').innerHTML = dateTime;
-  document.getElementById('imgNum').innerHTML = (seqnum + 1) + "/" + (images["images"].length);
-  document.getElementById('title').innerHTML = images["images"][seqnum].replace("./img/","");
+  document.getElementById('imgNum').innerHTML = (seqnum + 1) + "/" + (images.length);
+  document.getElementById('title').innerHTML = images[seqnum]['img'].replace("./img/","");
   document.getElementById('location').href = generateMapsURL(seqnum);
-  document.getElementById('description').innerHTML = images["metadata"][seqnum]["UserComment"] ?? "No Description";
+  document.getElementById('description').innerHTML = images[seqnum]['metadata']['UserComment'] ?? 'No Description';
 
   document.getElementById('backButton').setAttribute('href', 'index.php#' + seqnum);
 
@@ -31,21 +30,21 @@ function generateMapsURL(seqnum) {
 
   //console.log(images["metadata"][seqnum]);
 
-  if (images["metadata"][seqnum]?.GPSLatitude) {
+  if (images[seqnum]['metadata']?.GPSLatitude) {
 
-    var lat_deg = parseFloat(images["metadata"][seqnum]["GPSLatitude"][0]);
-    var lat_min = parseFloat(images["metadata"][seqnum]["GPSLatitude"][1]);
-    var lat_sec = parseFloat(images["metadata"][seqnum]["GPSLatitude"][2]) / 10000;
-    if (images["metadata"][seqnum]["GPSLatitudeRef"] == "S") {
+    var lat_deg = parseFloat(images[seqnum]['metadata']['GPSLatitude'][0]);
+    var lat_min = parseFloat(images[seqnum]['metadata']['GPSLatitude'][1]);
+    var lat_sec = parseFloat(images[seqnum]['metadata']['GPSLatitude'][2]) / 10000;
+    if (images[seqnum]['metadata']['GPSLatitudeRef'] == 'S') {
       lat_deg *= -1;
       lat_min *= -1;
       lat_sec *= -1;
     }
 
-    var long_deg = parseFloat(images["metadata"][seqnum]["GPSLongitude"][0]);
-    var long_min = parseFloat(images["metadata"][seqnum]["GPSLongitude"][1]);
-    var long_sec = parseFloat(images["metadata"][seqnum]["GPSLongitude"][2]) / 10000;
-    if (images["metadata"][seqnum]["GPSLongitudeRef"] == "W") {
+    var long_deg = parseFloat(images[seqnum]['metadata']['GPSLongitude'][0]);
+    var long_min = parseFloat(images[seqnum]['metadata']['GPSLongitude'][1]);
+    var long_sec = parseFloat(images[seqnum]['metadata']['GPSLongitude'][2]) / 10000;
+    if (images[seqnum]['metadata']['GPSLongitudeRef'] == 'W') {
       long_deg *= -1;
       long_min *= -1;
       long_sec *= -1;
@@ -71,13 +70,13 @@ function basename(path) {
 
 function generateContent(seqnum) {
 
-  if (basename(images["images"][seqnum]).includes(".mp4")) {
+  if (basename(images[seqnum]['img']).includes('.mp4')) {
 
-    var html = '<video loading="lazy" class="photo" id="mainImage" preload="auto" controls><source src="' + images["images"][seqnum] + '" /></video>';
+    var html = '<video loading="lazy" class="photo" id="mainImage" preload="auto" controls><source src="' + images[seqnum]['img'] + '" /></video>';
     
   } else {
 
-    var html = '<img class="photo" id="mainImage" src="' + images["images"][seqnum] + '" />';
+    var html = '<img class="photo" id="mainImage" src="' + images[seqnum]['img'] + '" />';
 
   }
 
@@ -94,7 +93,7 @@ function back_photo() {
 
   } else {
 
-    seqnum = images["images"].length - 1;
+    seqnum = images.length - 1;
     goto_photo(seqnum);
 
   }
@@ -103,7 +102,7 @@ function back_photo() {
 
 function forward_photo() {
 
-  if (!(seqnum == images["images"].length - 1)) {
+  if (!(seqnum == images.length - 1)) {
 
     seqnum++;
     goto_photo(seqnum);
@@ -119,9 +118,9 @@ function forward_photo() {
 
 function get_dateTime(images, seqnum) {
 
-  if (images["metadata"][seqnum]?.DateTimeOriginal) {
+  if (images[seqnum]['metadata']?.DateTimeOriginal) {
 
-    var dateTime = images["metadata"][seqnum]["DateTimeOriginal"];
+    var dateTime = images[seqnum]['metadata']["DateTimeOriginal"];
     //console.log(dateTime);
 
     dateTime = dateTime.replace(/([0-9]{4}):([0-9]{2}):([0-9]{2}) /, "$1-$2-$3T");
@@ -146,8 +145,8 @@ function get_dateTime(images, seqnum) {
 
 function get_date(images, seqnum) {
 
-  if (images["metadata"][seqnum]?.DateTimeOriginal) {
-    var date = images["metadata"][seqnum]["DateTimeOriginal"];
+  if (images[seqnum]['metadata']?.DateTimeOriginal) {
+    var date = images[seqnum]['metadata']['DateTimeOriginal'];
     date = date.replace(/([0-9]{4}):([0-9]{2}):([0-9]{2}) /, "$1-$2-$3T");
     date = date.replace(/T.*/);
 
@@ -169,7 +168,6 @@ function get_date(images, seqnum) {
 }
 
 function post(url, data) {
-
   fetch(url, {
     method: "POST",
     headers: {'Content-Type': 'application/json'},
@@ -177,7 +175,6 @@ function post(url, data) {
   }).then(res => {
     console.log("Request Response: ", res);
   });
-
 }
 
 function redirect(url, data) {
@@ -224,9 +221,3 @@ function generateHeaderLinks(headers) {
   }
 
 }
-
-
-
-
-
-
