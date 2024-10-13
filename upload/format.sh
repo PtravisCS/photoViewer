@@ -55,6 +55,14 @@ if [ ${#count[@]} -gt 0 ]; then
 
 	#mogrify -resize 250x250 *.png
 	#mv ./*.png ../thumbs/
+
+  #strip audio track from video
+  for i in *.mp4; do
+    [ -f "$i" ] || break
+    ffmpeg -hide_banner -loglevel error -nostats -i "$i" -c copy -an ./temp.mp4
+    mv ./temp.mp4 "./$i"
+  done
+
 	mv ./*.mp4 ../img/
 
 fi
